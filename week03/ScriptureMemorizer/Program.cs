@@ -1,27 +1,49 @@
 using System;
 
-namespace Week03Project
+namespace ScriptureMemorizer
 {
     class Program
     {
         static void Main(string[] args)
         {
-            // Test all constructors
-            Fraction f1 = new Fraction();          // 1/1
-            Fraction f2 = new Fraction(5);         // 5/1
-            Fraction f3 = new Fraction(3, 4);      // 3/4
-            Fraction f4 = new Fraction(1, 3);      // 1/3
+            Reference reference = new Reference("Proverbs", 3, 5, 6);
+            Scripture scripture = new Scripture(reference,
+                "Trust in the Lord with all thine heart and lean not unto thine own understanding");
 
-            // Display results
-            Console.WriteLine("Fraction f1: " + f1.GetFractionString() + " = " + f1.GetDecimalValue());
-            Console.WriteLine("Fraction f2: " + f2.GetFractionString() + " = " + f2.GetDecimalValue());
-            Console.WriteLine("Fraction f3: " + f3.GetFractionString() + " = " + f3.GetDecimalValue());
-            Console.WriteLine("Fraction f4: " + f4.GetFractionString() + " = " + f4.GetDecimalValue());
+            while (true)
+            {
+                SafeClear();
+                Console.WriteLine(scripture.GetDisplayText());
+                Console.WriteLine("\nPress Enter to hide words or type 'quit' to exit.");
 
-            // Demonstrate setters
-            f4.SetTop(2);
-            f4.SetBottom(5);
-            Console.WriteLine("Updated f4: " + f4.GetFractionString() + " = " + f4.GetDecimalValue());
+                string input = Console.ReadLine();
+                if (input?.ToLower() == "quit")
+                    break;
+
+                scripture.HideRandomWords();
+
+                if (scripture.AllWordsHidden())
+                {
+                    SafeClear();
+                    Console.WriteLine(scripture.GetDisplayText());
+                    Console.WriteLine("\nAll words are hidden. Program ending...");
+                    break;
+                }
+            }
+        }
+
+        // ✅ Safe clear method to avoid IOException
+        static void SafeClear()
+        {
+            try
+            {
+                Console.Clear();
+            }
+            catch (IOException)
+            {
+                // Fallback: simulate clearing by printing blank lines
+                Console.WriteLine(new string('\n', 20));
+            }
         }
     }
 }
